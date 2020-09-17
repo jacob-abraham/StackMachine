@@ -1,0 +1,33 @@
+program -> data_section text_section;
+
+directive -> DOT ID directive_args;
+
+# directive is .section DATA
+data_section -> ;
+data_section -> directive data_list;
+data_list -> data | data data_list;
+data -> directive | label | NUM;
+
+# directive is .section TEXT, only required if data
+text_section -> directive text_list | text_list;
+
+text_list -> text | text text_list;
+text -> inst | directive | label;
+inst -> opcode opcode_args;
+
+# number of args determined by directive or opcode type
+directive_args -> ID | NUM;
+opcode_args -> NUM | label;
+opcode_args -> ;
+
+label -> AT ID;
+opcode -> ID;
+
+
+# multiple newlines in a row are condensed into one newline
+# NUM -> [0-9]+
+# AT -> @
+# ID -> [_a-zA-Z][_a-zA-Z0-9]*
+# Comments are HASH till end of line
+
+# define opcodes as a IDs, with a associated stack effect and length

@@ -1,0 +1,15 @@
+.DS_Store
+.vscode
+
+# build files
+*.dSYM
+*.out
+bin/
+
+# gen files
+grammar_sets.txt
+stack_machine
+*.wasm
+*.wat
+wasm/stack_machine.js
+

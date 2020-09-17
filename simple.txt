@@ -1,0 +1,51 @@
+
+.section data
+1 2 3 4 5
+@d 5
+7 103
+@arr .space 20
+5 10 11
+
+.section text
+
+
+sub
+mod
+div
+
+@go div
+
+br_eq @goto
+br_eq @go
+pop
+load 2
+div div
+push 2
+push 3
+push 4
+push 5
+
+# stack: 5 4 3 2 1
+add # pop 5 and 4, push 9
+# stack: 9 3 2 1
+
+
+pop
+# stack: 3 2 1
+
+neg # pop 3 push -3
+
+push 1
+
+cond # A ? B : C
+
+# stack: -3 1
+
+pop
+
+br_eq @goto
+push 6
+@goto
+push 7
+
+div

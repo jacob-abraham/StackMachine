@@ -1,0 +1,132 @@
+[
+ {
+  "directory": "/Users/abraham/Development/CPP/StackMachine",
+  "arguments": [
+   "clang++",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-g3",
+   "-O3",
+   "-std=c++11",
+   "-msse",
+   "-msse2",
+   "-mssse3",
+   "-msse4.1",
+   "-msse4.2",
+   "-mavx",
+   "-c",
+   "src/main.cc",
+   "-o",
+   "bin/main.o"
+  ],
+  "file": "src/main.cc"
+ },
+ {
+  "directory": "/Users/abraham/Development/CPP/StackMachine",
+  "arguments": [
+   "emcc",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-g3",
+   "-O3",
+   "-std=c++11",
+   "-msse2",
+   "-msimd128",
+   "-c",
+   "src/lexer.cc",
+   "-o",
+   "bin/lexer.bc"
+  ],
+  "file": "src/lexer.cc"
+ },
+ {
+  "directory": "/Users/abraham/Development/CPP/StackMachine",
+  "arguments": [
+   "emcc",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-g3",
+   "-O3",
+   "-std=c++11",
+   "-msse2",
+   "-msimd128",
+   "-c",
+   "src/parser.cc",
+   "-o",
+   "bin/parser.bc"
+  ],
+  "file": "src/parser.cc"
+ },
+ {
+  "directory": "/Users/abraham/Development/CPP/StackMachine",
+  "arguments": [
+   "clang++",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-g3",
+   "-O3",
+   "-std=c++11",
+   "-msse",
+   "-msse2",
+   "-mssse3",
+   "-msse4.1",
+   "-msse4.2",
+   "-mavx",
+   "-c",
+   "src/opcodes.cc",
+   "-o",
+   "bin/opcodes.bc"
+  ],
+  "file": "src/opcodes.cc"
+ },
+ {
+  "directory": "/Users/abraham/Development/CPP/StackMachine",
+  "arguments": [
+   "clang++",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-g3",
+   "-O3",
+   "-std=c++11",
+   "-msse",
+   "-msse2",
+   "-mssse3",
+   "-msse4.1",
+   "-msse4.2",
+   "-mavx",
+   "-c",
+   "src/directive.cc",
+   "-o",
+   "bin/directive.bc"
+  ],
+  "file": "src/directive.cc"
+ },
+ {
+  "directory": "/Users/abraham/Development/CPP/StackMachine",
+  "arguments": [
+   "clang++",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-g3",
+   "-O3",
+   "-std=c++11",
+   "-msse",
+   "-msse2",
+   "-mssse3",
+   "-msse4.1",
+   "-msse4.2",
+   "-mavx",
+   "-c",
+   "src/memory.cc",
+   "-o",
+   "bin/memory.bc"
+  ],
+  "file": "src/memory.cc"
+ }
+]

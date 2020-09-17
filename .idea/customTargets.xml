@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CLionExternalBuildManager">
+    <target id="65236e9f-23d9-403a-993b-90d522cb77c8" name="Native" defaultType="MAKE">
+      <configuration id="2e794144-0ebd-4270-9a54-f948bd0bc79f" name="Native">
+        <build type="MAKE">
+          <make targetName="native" />
+        </build>
+        <clean type="MAKE">
+          <make targetName="clean" />
+        </clean>
+      </configuration>
+    </target>
+    <target id="7144cbec-d72e-4656-8560-b9d918dc0ee5" name="WASM" defaultType="MAKE">
+      <configuration id="8e50d550-01af-4e9c-b76c-065aad86fa41" name="WASM">
+        <build type="MAKE">
+          <make targetName="wasm" />
+        </build>
+        <clean type="MAKE">
+          <make targetName="clean" />
+        </clean>
+      </configuration>
+    </target>
+    <target id="13e8d3b9-dc34-4894-a73d-da8928803fdb" name="All" defaultType="MAKE">
+      <configuration id="82596c9b-f6cc-4b8b-89a7-50e5a7f7709f" name="All">
+        <build type="MAKE">
+          <make targetName="all" />
+        </build>
+        <clean type="MAKE">
+          <make targetName="clean" />
+        </clean>
+      </configuration>
+    </target>
+  </component>
+</project>
