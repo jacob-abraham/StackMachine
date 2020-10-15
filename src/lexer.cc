@@ -21,6 +21,14 @@ Token Lexer::getToken() {
     return t;
   }
 
+  /*std::cout << &input << std::endl;
+  std::string s;
+  input >> s;
+  std::cout << s << std::endl;
+
+  std::cout << "finding token" << std::endl;*/
+
+
   //skip all spaces
   skipWhiteSpace();
 
@@ -36,9 +44,15 @@ Token Lexer::getToken() {
   if(isNUM()) return getNUM();
   if(isSymbol()) return getSymbol();
 
+  std::cout << "c: " << (unsigned int)peekChar() << "fail to find token" << line_number << std::endl;
+
   //if at this point we have not returned, its either eof or error
   Token t("", TokenType::ERROR, line_number);
   if(endOfInput()) {
+    std::cout << "EOF" << std::endl;
+    std::cout << "c: " << (unsigned int)getChar() << "fail to find token" << line_number << std::endl;
+    std::cout << "c: " << (unsigned int)getChar() << "fail to find token" << line_number << std::endl;
+    std::cout << "c: " << (unsigned int)getChar() << "fail to find token" << line_number << std::endl;
     t.token_type = TokenType::END_OF_FILE;
   }
   return t;

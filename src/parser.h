@@ -12,6 +12,7 @@
 #include "lexer.h"
 #include "opcodes.h"
 #include "directive.h"
+#include "directive_handlers.h"
 #include "memory.h"
 
 typedef std::vector<std::string> StringList;
@@ -27,7 +28,9 @@ public:
 
   virtual const char* what() const throw()
   {
-    return getString().c_str();
+    //const ref trick to allow for copy so string isnt local stack memory
+    const std::string& ret = getString();
+    return ret.c_str();
   }
 
   friend std::ostream& operator<<(std::ostream& out, const SyntaxError& se) {

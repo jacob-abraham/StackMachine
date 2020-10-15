@@ -58,9 +58,6 @@ namespace Directives {
     std::vector<std::string> args;
   };
 
-  typedef bool (*DirectiveHandler)(size_t,...);
-  DirectiveHandler getHandler(DirectiveType);
-
 };
 
 

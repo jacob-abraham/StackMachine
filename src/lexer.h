@@ -6,6 +6,7 @@
 #include <istream>
 #include <iostream>
 #include <ostream>
+#include <sstream>
 
 
 #define LEXER_TOKENS(F)                                                        \
@@ -40,10 +41,19 @@ public:
   static const std::string types[];
 
   friend std::ostream &operator<<(std::ostream &out, const Token &t) {
-    out << "{" << Token::types[t.token_type] << ",";
-    if (!t.lexeme.empty()) out << t.lexeme << ",";
-    out << t.line_no << "}";
+    out << t.getString();
     return out;
+  }
+
+  std::string getString() const {
+    std::stringstream str;
+    str << "{" << Token::types[token_type] << ",";
+    if (!lexeme.empty()) str << lexeme << ",";
+    str << line_no << "}";
+    return str.str();
+  }
+  std::string getString() {
+    return const_cast<const Token*>(this)->getString();
   }
 
   static std::string getTokenType(const Token &t) { return Token::types[t.token_type]; }

@@ -9,6 +9,7 @@
 #include <vector>
 #include <sstream>
 #include <iomanip>
+#include <iostream>
 
 #if defined(__i386__) || defined(__x86_64__)
 #include <immintrin.h>
@@ -41,11 +42,13 @@ public:
 
   virtual const char* what() const throw()
   {
-    return getString().c_str();
+    //const ref trick to allow for copy so string isnt local stack memory
+    const std::string& ret = getString();
+    return ret.c_str();
   }
 
-  friend std::ostream& operator<<(std::ostream& out, const MemoryError& se) {
-    out << se.getString();
+  friend std::ostream& operator<<(std::ostream& out, const MemoryError& me) {
+    out << me.getString();
     return out;
   }
   std::string getString() const {
@@ -66,6 +69,7 @@ namespace MemoryParser {
 
   extern std::vector<std::string> stringTable;
   LABEL getLabel(std::string);
+  std::string getLabelName(LABEL);
 }
 
 
@@ -89,7 +93,8 @@ public:
   WORD getText(LABEL);
 
   bool addLabel(LABEL, ADDRESS);
-  bool addLabel(LABEL);
+  bool addDataLabel(LABEL);
+  bool addTextLabel(LABEL);
 
   ADDRESS getAddress(LABEL);
 

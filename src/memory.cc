@@ -22,6 +22,13 @@ LABEL MemoryParser::getLabel(std::string x) {
   MemoryParser::stringTable.push_back(x);
   return MemoryParser::stringTable.size()-1;
 }
+std::string MemoryParser::getLabelName(LABEL l) {
+  if((size_t)l < MemoryParser::stringTable.size() &&
+      (size_t)l >= 0) {
+    return MemoryParser::stringTable.at((size_t)l);
+  }
+  throw MemoryError("No such label");
+}
 
 
 
@@ -72,6 +79,10 @@ Memory::~Memory() {
 
 //add data to first available address
 ADDRESS Memory::addData(WORD x) {
+
+  //std::cout << data_start_addr << " " << data_offset_addr << " " << text_start_addr << " " << x << std::endl;
+
+
   //if we have space for data
   if(data_start_addr+data_offset_addr < text_start_addr) {
     //set the data and increase the offset
@@ -154,8 +165,12 @@ bool Memory::addLabel(LABEL lbl, ADDRESS addr) {
   return true;
 }
 //label top level address
-bool Memory::addLabel(LABEL lbl) {
+bool Memory::addTextLabel(LABEL lbl) {
   return addLabel(lbl, text_start_addr+text_offset_addr);
+}
+//label top level address
+bool Memory::addDataLabel(LABEL lbl) {
+  return addLabel(lbl, data_start_addr+data_offset_addr);
 }
 
 //get address for label
@@ -190,6 +205,11 @@ std::string Memory::getMemString() {
   return ss.str();
 }
 std::string Memory::getMemSectionString(size_t start, size_t length) {
+
+  if(start < 0 || start >= size || start + length > size) {
+    throw MemoryError("Invalid memory access");
+  }
+
   std::stringstream ss;
 
   size_t const rowLength = 16;

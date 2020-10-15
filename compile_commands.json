@@ -63,19 +63,15 @@
  {
   "directory": "/Users/abraham/Development/CPP/StackMachine",
   "arguments": [
-   "clang++",
+   "emcc",
    "-Wall",
    "-Wextra",
    "-Werror",
    "-g3",
    "-O3",
    "-std=c++11",
-   "-msse",
    "-msse2",
-   "-mssse3",
-   "-msse4.1",
-   "-msse4.2",
-   "-mavx",
+   "-msimd128",
    "-c",
    "src/opcodes.cc",
    "-o",
@@ -86,19 +82,15 @@
  {
   "directory": "/Users/abraham/Development/CPP/StackMachine",
   "arguments": [
-   "clang++",
+   "emcc",
    "-Wall",
    "-Wextra",
    "-Werror",
    "-g3",
    "-O3",
    "-std=c++11",
-   "-msse",
    "-msse2",
-   "-mssse3",
-   "-msse4.1",
-   "-msse4.2",
-   "-mavx",
+   "-msimd128",
    "-c",
    "src/directive.cc",
    "-o",
@@ -109,24 +101,58 @@
  {
   "directory": "/Users/abraham/Development/CPP/StackMachine",
   "arguments": [
-   "clang++",
+   "emcc",
    "-Wall",
    "-Wextra",
    "-Werror",
    "-g3",
    "-O3",
    "-std=c++11",
-   "-msse",
    "-msse2",
-   "-mssse3",
-   "-msse4.1",
-   "-msse4.2",
-   "-mavx",
+   "-msimd128",
    "-c",
    "src/memory.cc",
    "-o",
    "bin/memory.bc"
   ],
   "file": "src/memory.cc"
+ },
+ {
+  "directory": "/Users/abraham/Development/CPP/StackMachine",
+  "arguments": [
+   "emcc",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-g3",
+   "-O3",
+   "-std=c++11",
+   "-msse2",
+   "-msimd128",
+   "-c",
+   "src/wasm_bindings.cc",
+   "-o",
+   "bin/wasm_bindings.bc"
+  ],
+  "file": "src/wasm_bindings.cc"
+ },
+ {
+  "directory": "/Users/abraham/Development/CPP/StackMachine",
+  "arguments": [
+   "emcc",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-g3",
+   "-O3",
+   "-std=c++11",
+   "-msse2",
+   "-msimd128",
+   "-c",
+   "src/directive_handlers.cc",
+   "-o",
+   "bin/directive_handlers.bc"
+  ],
+  "file": "src/directive_handlers.cc"
  }
 ]

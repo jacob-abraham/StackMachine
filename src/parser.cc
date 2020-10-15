@@ -4,8 +4,10 @@
 void Parser::parse() {
 
   //initl mem
-  memoryTable = new Memory(100,0,50);
-
+  memoryTable = new Memory(500,0,200);
+  //std::string s(std::istreambuf_iterator<char>(input), {});
+  //std::cout << s << std::endl;
+  //std::cout << "Start" << lexer.getToken() << std::endl;
   parse_program();
 }
 
@@ -109,18 +111,18 @@ PARSER_FUNC(directive, Directives::Directive*) {
   dir->args = args;
 
   //before we return, call the handler
-  auto handler = Directives::getHandler(dirType);
   bool handlerRet = false;
   //for special cases pass args
   switch(dirType) {
     case Directives::DirectiveType::kSECTION:
-      handlerRet = handler(1, &args[0]);
+      handlerRet = DirectiveHandler_SECTION(args[0]);
       break;
     case Directives::DirectiveType::kSPACE:
-      handlerRet = handler(2, MemoryParser::getWord(args[0]), memoryTable);
+      DirectiveHandler_SPACE(MemoryParser::getWord(args[0]), memoryTable);
+      handlerRet = true;
       break;
     default:
-      handlerRet = handler(0);
+      handlerRet = DirectiveHandler_SECTION(0);
       break;
   }
 
@@ -183,8 +185,8 @@ PARSER_FUNC(data, void) {
     memoryTable->addData(w);
   }
   else if(t.token_type == AT) {
-    //dont need it, already in table
-    parse_label();
+    LABEL label = parse_label();
+    memoryTable->addDataLabel(label);
   }
   else if(t.token_type == DOT) {
     //TODO: for now throw away directive, eventually will need to handle this
@@ -200,12 +202,7 @@ PARSER_FUNC(label, LABEL) {
   expect(AT);
   Token t = expect(ID);
   LABEL label = MemoryParser::getLabel(t.lexeme);
-  if(memoryTable->addLabel(label)) {
-    return label;
-  }
-  else {
-    throw SyntaxError("Failed to add label '"+t.lexeme+"'", t.line_no);
-  }
+  return label;
 }
 //text_list -> text | text text_list;
 PARSER_FUNC(text_list, void) {
@@ -231,20 +228,23 @@ PARSER_FUNC(text_list, void) {
     }
 
     //no section directive, more to go
-    if(!hasSectionDirective) {
+    if(!hasSectionDirective && lexer.peek().token_type != END_OF_FILE && lexer.peek().token_type != ERROR) {
+      std::cout << lexer.peek().token_type << std::endl;
       parse_text_list();
     }
   }
 }
 //text -> inst | directive | label;
 PARSER_FUNC(text, void) {
+  std::cout << "t" << std::endl;
   Token t = lexer.peek();
+  std::cout << "hello" << t.token_type << std::endl;
   if(t.token_type == ID) {
     parse_inst();
   }
   else if(t.token_type == AT) {
-    //dont need it, already in table
-    parse_label();
+    LABEL label = parse_label();
+    memoryTable->addTextLabel(label);
   }
   else if(t.token_type == DOT) {
     //TODO: for now throw away directive, eventually will need to handle this
@@ -252,6 +252,7 @@ PARSER_FUNC(text, void) {
     delete dir;
   }
   else {
+    std::cout << t.token_type << std::endl;
     throw SyntaxError("Invalid TEXT section element '"+t.lexeme+"'", t.line_no);
   }
 }

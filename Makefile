@@ -25,16 +25,16 @@ LDFLAGS= $(CFLAGS)
 EMCC=emcc
 EMFLAGS= -Wall -Wextra -Werror -g3 -O3 -std=c++11 -msse2 -msimd128
 EMLDFLAGS= $(EMFLAGS) \
--s WASM=1 -s MODULARIZE=1 -s=EXPORT_ES6=0 -s ENVIRONMENT='web,worker,shell' \
+-s WASM=1 -s MODULARIZE=1 -s EXPORT_ES6=0 -s ENVIRONMENT='web,worker,shell' \
 -s INVOKE_RUN=0 -s EXIT_RUNTIME=0 -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
 -s ALLOW_MEMORY_GROWTH=1 --pre-js wasm/prejs.js
 
-WAT2WASM=wat2wasm
-WASM2WAT=wasm2wat
+WAT2WASM=wat2wasm --enable-simd
+WASM2WAT=wasm2wat --enable-simd
 
 EXTENSION=cc
-SOURCES=main.cc lexer.cc parser.cc opcodes.cc directive.cc memory.cc
-EMSOURCES=lexer.cc parser.cc opcodes.cc directive.cc memory.cc
+SOURCES=main.cc lexer.cc parser.cc opcodes.cc directive.cc memory.cc directive_handlers.cc
+EMSOURCES=wasm_bindings.cc lexer.cc parser.cc opcodes.cc directive.cc memory.cc directive_handlers.cc
 SOURCE_FOLDER=src
 OBJECTS = $(patsubst %.$(EXTENSION),$(OBJECT_FOLDER)/%.o,$(SOURCES))
 OBJECT_FOLDER=bin
@@ -46,7 +46,6 @@ WASM_TARGET=wasm/stack_machine.wasm
 all: native wasm
 native: $(NATIVE_TARGET)
 wasm: $(WASM_TARGET)
-
 
 
 # compile for native
@@ -71,6 +70,9 @@ $(OBJECT_FOLDER)/directive.o: $(SOURCE_FOLDER)/directive.cc $(SOURCE_FOLDER)/dir
 $(OBJECT_FOLDER)/memory.o: $(SOURCE_FOLDER)/memory.cc $(SOURCE_FOLDER)/memory.h $(SOURCE_FOLDER)/stringhelper.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(OBJECT_FOLDER)/directive_handlers.o: $(SOURCE_FOLDER)/directive_handlers.cc $(SOURCE_FOLDER)/memory.h $(SOURCE_FOLDER)/stringhelper.h $(SOURCE_FOLDER)/directive.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
 
 
 
@@ -80,20 +82,26 @@ $(WASM_TARGET): $(EMOBJECTS) wasm/prejs.js
 	$(WASM2WAT) $@ > $(patsubst %.wasm,%.wat,$@)
 
 
+$(OBJECT_FOLDER)/wasm_bindings.bc: $(SOURCE_FOLDER)/wasm_bindings.cc $(SOURCE_FOLDER)/parser.h $(SOURCE_FOLDER)/lexer.h $(SOURCE_FOLDER)/memory.h
+	$(EMCC) $(EMFLAGS) -c $< -o $@
+
 $(OBJECT_FOLDER)/lexer.bc: $(SOURCE_FOLDER)/lexer.cc $(SOURCE_FOLDER)/lexer.h
 	$(EMCC) $(EMFLAGS) -c $< -o $@
 
-$(OBJECT_FOLDER)/parser.bc: $(SOURCE_FOLDER)/parser.cc $(SOURCE_FOLDER)/parser.h $(SOURCE_FOLDER)/lexer.h
+$(OBJECT_FOLDER)/parser.bc: $(SOURCE_FOLDER)/parser.cc $(SOURCE_FOLDER)/parser.h $(SOURCE_FOLDER)/lexer.h $(SOURCE_FOLDER)/stringhelper.h
 	$(EMCC) $(EMFLAGS) -c $< -o $@
 
-$(OBJECT_FOLDER)/opcodes.bc: $(SOURCE_FOLDER)/opcodes.cc $(SOURCE_FOLDER)/opcodes.h
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJECT_FOLDER)/opcodes.bc: $(SOURCE_FOLDER)/opcodes.cc $(SOURCE_FOLDER)/opcodes.h $(SOURCE_FOLDER)/stringhelper.h
+	$(EMCC) $(EMFLAGS) -c $< -o $@
 
-$(OBJECT_FOLDER)/directive.bc: $(SOURCE_FOLDER)/directive.cc $(SOURCE_FOLDER)/directive.h
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJECT_FOLDER)/directive.bc: $(SOURCE_FOLDER)/directive.cc $(SOURCE_FOLDER)/directive.h $(SOURCE_FOLDER)/directive_handlers.h $(SOURCE_FOLDER)/stringhelper.h
+	$(EMCC) $(EMFLAGS) -c $< -o $@
 
-$(OBJECT_FOLDER)/memory.bc: $(SOURCE_FOLDER)/memory.cc $(SOURCE_FOLDER)/memory.h
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJECT_FOLDER)/memory.bc: $(SOURCE_FOLDER)/memory.cc $(SOURCE_FOLDER)/memory.h $(SOURCE_FOLDER)/stringhelper.h
+	$(EMCC) $(EMFLAGS) -c $< -o $@
+
+$(OBJECT_FOLDER)/directive_handlers.bc: $(SOURCE_FOLDER)/directive_handlers.cc $(SOURCE_FOLDER)/memory.h $(SOURCE_FOLDER)/stringhelper.h $(SOURCE_FOLDER)/directive.h
+	$(EMCC) $(EMFLAGS) -c $< -o $@
 
 .PHONY: mkdirs
 mkdirs:

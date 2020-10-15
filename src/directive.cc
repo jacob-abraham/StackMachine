@@ -1,6 +1,5 @@
 
 #include "directive.h"
-#include "directive_handlers.h"
 
 
 char const* directive_string_rep[] = {
@@ -60,16 +59,5 @@ size_t Directives::getArgCount(Directives::DirectiveType d) {
     default:
       //error
       return 0;
-  }
-}
-
-Directives::DirectiveHandler Directives::getHandler(Directives::DirectiveType d) {
-  switch(d) {
-#define CASE(x) case k##x: return &DirectiveHandler_##x;
-    ALL_DIRECTIVES(CASE)
-#undef CASE
-    case kUNKNOWN:
-    default:
-      return &DirectiveHandler_UNKNOWN;
   }
 }
